@@ -67,7 +67,7 @@ define('CHARSET', 'ISO-8859-1');
 define('REPLACE_FLAGS', ENT_COMPAT | ENT_XHTML);
 if (!function_exists('htmlspecialchars_54')) {
 function htmlspecialchars_54($string, $flags=REPLACE_FLAGS, $encoding=CHARSET, $double_encode=true) {
-return htmlspecialchars_54($string, $flags, $encoding, $double_encode);
+return htmlspecialchars($string, $flags, $encoding, $double_encode);
 }
 }
 
