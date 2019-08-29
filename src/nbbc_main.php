@@ -115,7 +115,7 @@
 			print "<div>Profiled times:\n<ul>\n";
 			ksort($this->total_times);
 			foreach ($this->total_times as $name => $time) {
-				print "<li><b>" . htmlspecialchars($name) . "</b>: " . sprintf("%0.2f msec", $time * 1000) . "</li>\n";
+				print "<li><b>" . htmlspecialchars_54($name) . "</b>: " . sprintf("%0.2f msec", $time * 1000) . "</li>\n";
 			}
 			print "</ul>\n</div>\n";
 		}
@@ -140,6 +140,14 @@
 	// of PHP, including a file that uses a relative pathname doesn't always work
 	// correctly due to the way include_path is set.
 	$BBCode_SourceDir = dirname(__FILE__);
+
+	define('CHARSET', 'ISO-8859-1');
+	define('REPLACE_FLAGS', ENT_COMPAT | ENT_XHTML);
+	if (!function_exists('htmlspecialchars_54')) {
+		function htmlspecialchars_54($string, $flags=REPLACE_FLAGS, $encoding=CHARSET, $double_encode=true) {
+    		return htmlspecialchars_54($string, $flags, $encoding, $double_encode);
+		}
+	}
 
 	require_once("$BBCode_SourceDir/nbbc_lex.php");		// The lexical analyzer.
 	require_once("$BBCode_SourceDir/nbbc_parse.php");	// The parser/converter.

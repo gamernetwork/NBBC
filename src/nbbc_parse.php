@@ -88,7 +88,7 @@
 		var $root_class;	// The root container class.
 		var $lost_start_tags; // For repair when tags are badly mis-nested.
 		var $start_tags;	// An associative array of locations of start tags on the stack.
-		var $allow_ampersand; // If true, we use str_replace() instead of htmlspecialchars().
+		var $allow_ampersand; // If true, we use str_replace() instead of htmlspecialchars_54().
 		var $tag_marker;	// Set to '[', '<', '{', or '('.
 		var $ignore_newlines; // If true, newlines will be treated as normal whitespace.
 		var $plain_mode;	// Don't output tags:  Just output text/whitespace/newlines only.
@@ -391,18 +391,18 @@
 		*/
 		}
 
-		// This function is used to wrap around calls to htmlspecialchars() for
+		// This function is used to wrap around calls to htmlspecialchars_54() for
 		// plain text so that you can add your own text-evaluation code if you want.
 		// For example, you might want to make *foo* turn into <b>foo</b>, or
-		// something like that.  The default behavior is just to call htmlspecialchars()
+		// something like that.  The default behavior is just to call htmlspecialchars_54()
 		// and be done with it, but if you inherit and override this function, you
 		// can do pretty much anything you want.
 		//
-		// Note that htmlspecialchars() is still used directly for doing things like
+		// Note that htmlspecialchars_54() is still used directly for doing things like
 		// cleaning up URLs in tags; this function is applied to *plain* *text* *only*.
 		function HTMLEncode($string) {
 			if (!$this->allow_ampersand)
-				return htmlspecialchars($string);
+				return htmlspecialchars_54($string);
 			else return str_replace(Array('<', '>', '"'),
 					Array('&lt;', '&gt;', '&quot;'), $string);
 		}
@@ -416,7 +416,7 @@
 			$BBCode_Profiler->Begin('FixupOutput');
 
 			if ($this->debug)
-				print "<b>FixupOutput:</b> input: <tt>" . htmlspecialchars($string) . "</tt><br />\n";
+				print "<b>FixupOutput:</b> input: <tt>" . htmlspecialchars_54($string) . "</tt><br />\n";
 
 			if (!$this->detect_urls) {
 				// Easy case:  No URL-decoding, so don't take the time to do it.
@@ -452,7 +452,7 @@
 			}
 
 			if ($this->debug)
-				print "<b>FixupOutput:</b> output: <tt>" . htmlspecialchars($output) . "</tt><br />\n";
+				print "<b>FixupOutput:</b> output: <tt>" . htmlspecialchars_54($output) . "</tt><br />\n";
 
 			$BBCode_Profiler->End('FixupOutput');
 
@@ -509,8 +509,8 @@
 								$info = @getimagesize($this->smiley_dir . '/' . $this->smileys[$token]);
 								$this->smiley_info[$token] = $info;
 							}
-							$alt = htmlspecialchars($token);
-							$output .= "<img src=\"" . htmlspecialchars($this->smiley_url . '/' . $this->smileys[$token])
+							$alt = htmlspecialchars_54($token);
+							$output .= "<img src=\"" . htmlspecialchars_54($this->smiley_url . '/' . $this->smileys[$token])
 								. "\" width=\"{$info[0]}\" height=\"{$info[1]}\""
 								. " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
 						}
@@ -540,7 +540,7 @@
 			$this->smiley_regex = implode("", $regex);
 
 			if ($this->debug)
-				print "<b>Internal_RebuildSmileys:</b> regex: <tt>" . htmlspecialchars($regex) . "</tt><br />\n";
+				print "<b>Internal_RebuildSmileys:</b> regex: <tt>" . htmlspecialchars_54($regex) . "</tt><br />\n";
 		}
 
 		// Search through the input for URLs, or things that are URL-like.  We search
@@ -680,7 +680,7 @@
 		//        control codes and tabs, to be collapsed into individual space characters.
 		//
 		//   e - Apply HTMLEncode().
-		//   h - Apply htmlspecialchars().
+		//   h - Apply htmlspecialchars_54().
 		//   k - Apply Wikify().
 		//   u - Apply urlencode().
 		//
@@ -702,14 +702,14 @@
 				if (!$is_an_insert) {
 					if ($this->debug) {
 						print "<b>FormatInserts:</b> add text: <tt>"
-							. htmlspecialchars($piece) . "</tt><br />\n";
+							. htmlspecialchars_54($piece) . "</tt><br />\n";
 					}
 					$result[] = $piece;
 				}
 				else if (!preg_match('/\{\$([a-zA-Z0-9_:-]+)((?:\\.[a-zA-Z0-9_:-]+)*)(?:\/([a-zA-Z0-9_:-]+))?\}/', $piece, $matches)) {
 					if ($this->debug) {
 						print "<b>FormatInserts:</b> not an insert: add as text: <tt>"
-							. htmlspecialchars($piece) . "</tt><br />\n";
+							. htmlspecialchars_54($piece) . "</tt><br />\n";
 					}
 					$result[] = $piece;
 				}
@@ -756,14 +756,14 @@
 						if      (isset($flags['b'])) $value = basename($value);
 						if      (isset($flags['e'])) $value = $this->HTMLEncode($value);
 						else if (isset($flags['k'])) $value = $this->Wikify($value);
-						else if (isset($flags['h'])) $value = htmlspecialchars($value);
+						else if (isset($flags['h'])) $value = htmlspecialchars_54($value);
 						else if (isset($flags['u'])) $value = urlencode($value);
 						if      (isset($flags['n'])) $value = $this->nl2br($value);
 					}
 					
 					if ($this->debug) {
-						print "<b>FormatInserts:</b> add insert: <tt>" . htmlspecialchars($piece)
-							. "</tt> --&gt; <tt>" . htmlspecialchars($value) . "</tt><br />\n";
+						print "<b>FormatInserts:</b> add insert: <tt>" . htmlspecialchars_54($piece)
+							. "</tt> --&gt; <tt>" . htmlspecialchars_54($value) . "</tt><br />\n";
 					}
 					
 					// Append the value to the output.
@@ -835,7 +835,7 @@
 					$output[] = $token;
 					if ($this->debug) {
 						print "<b>Internal_GenerateOutput:</b> push text: <tt>"
-							. htmlspecialchars($token[BBCODE_STACK_TEXT]) . "</tt><br />\n";
+							. htmlspecialchars_54($token[BBCODE_STACK_TEXT]) . "</tt><br />\n";
 					}
 				}
 				else {
@@ -864,7 +864,7 @@
 						);
 						if ($this->debug) {
 							print "<b>Internal_GenerateOutput:</b> push broken tag: <tt>"
-								. htmlspecialchars($token['text']) . "</tt><br />\n";
+								. htmlspecialchars_54($token['text']) . "</tt><br />\n";
 						}
 					}
 					else {
@@ -873,7 +873,7 @@
 						// processed with the current output as its content.
 						if ($this->debug) {
 							print "<b>Internal_GenerateOutput:</b> found start tag with optional end tag: <tt>"
-								. htmlspecialchars($token[BBCODE_STACK_TEXT]) . "</tt><br />\n";
+								. htmlspecialchars_54($token[BBCODE_STACK_TEXT]) . "</tt><br />\n";
 						}
 
 						// If this was supposed to have an end tag, and we find a floating one
@@ -893,7 +893,7 @@
 
 						if ($this->debug) {
 							print "<b>Internal_GenerateOutput:</b> optional-tag's content: <tt>"
-								. htmlspecialchars($tag_body) . "</tt><br />\n";
+								. htmlspecialchars_54($tag_body) . "</tt><br />\n";
 						}
 
 						$this->Internal_UpdateParamsForMissingEndTag(@$token[BBCODE_STACK_TAG]);
@@ -902,7 +902,7 @@
 							
 						if ($this->debug) {
 							print "<b>Internal_GenerateOutput:</b> push optional-tag's output: <tt>"
-								. htmlspecialchars($tag_output) . "</tt><br />\n";
+								. htmlspecialchars_54($tag_output) . "</tt><br />\n";
 						}
 								
 						$output = Array(Array(
@@ -918,7 +918,7 @@
 				print "<b>Internal_GenerateOutput:</b> done; output contains " . count($output) . " items: <tt>"
 					. $this->Internal_DumpStack($output) . "</tt><br />\n";
 				$noutput = $this->Internal_CollectTextReverse($output, count($output) - 1);
-				print "<b>Internal_GenerateOutput:</b> output: <tt>" . htmlspecialchars($noutput) . "</tt><br />\n";
+				print "<b>Internal_GenerateOutput:</b> output: <tt>" . htmlspecialchars_54($noutput) . "</tt><br />\n";
 				print "<b>Internal_GenerateOutput:</b> Stack contents: <tt>" . $this->Internal_DumpStack() . "</tt><br />\n";
 			}
 			$this->Internal_ComputeCurrentClass();
@@ -986,7 +986,7 @@
 			if ($this->debug) {
 				print "<b>Internal_FinishTag:</b> stack has " . count($this->stack)
 					. " items; searching for start tag for <tt>[/"
-					. htmlspecialchars($tag_name) . "]</tt><br />\n";
+					. htmlspecialchars_54($tag_name) . "]</tt><br />\n";
 			}
 
 			// If this is a malformed tag like [/], tell them now, since there's
@@ -1051,7 +1051,7 @@
 			$this->Internal_ComputeCurrentClass();
 			
 			if ($this->debug)
-				print "<b>Internal_FinishTag:</b> output: <tt>" . htmlspecialchars($output) . "</tt><br />\n";
+				print "<b>Internal_FinishTag:</b> output: <tt>" . htmlspecialchars_54($output) . "</tt><br />\n";
 
 			return $output;
 		}
@@ -1063,7 +1063,7 @@
 			else $this->current_class = $this->root_class;
 			if ($this->debug) {
 				print "<b>Internal_ComputeCurrentClass:</b> current class is now \"<tt>"
-					. htmlspecialchars($this->current_class) . "</tt>\"<br />\n";
+					. htmlspecialchars_54($this->current_class) . "</tt>\"<br />\n";
 			}
 		}
 
@@ -1077,7 +1077,7 @@
 			foreach ($array as $item) {
 				switch (@$item[BBCODE_STACK_TOKEN]) {
 				case BBCODE_TEXT:
-					$string .= "\"" . htmlspecialchars(@$item[BBCODE_STACK_TEXT]) . "\" ";
+					$string .= "\"" . htmlspecialchars_54(@$item[BBCODE_STACK_TEXT]) . "\" ";
 					break;
 				case BBCODE_WS:
 					$string .= "WS ";
@@ -1086,7 +1086,7 @@
 					$string .= "NL ";
 					break;
 				case BBCODE_TAG:
-					$string .= "[" . htmlspecialchars(@$item[BBCODE_STACK_TAG]['_name']) . "] ";
+					$string .= "[" . htmlspecialchars_54(@$item[BBCODE_STACK_TAG]['_name']) . "] ";
 					break;
 				default:
 					$string .= "unknown ";
@@ -1106,7 +1106,7 @@
 			if ($this->debug) {
 				print "<b>Internal_CleanupWSByPoppingStack:</b> array has " . count($array)
 					. " items; pattern=\"<tt>"
-					. htmlspecialchars($pattern) . "</tt>\"<br />\n";
+					. htmlspecialchars_54($pattern) . "</tt>\"<br />\n";
 			}
 
 			if (strlen($pattern) <= 0) return;
@@ -1151,7 +1151,7 @@
 			if ($this->debug) {
 				$ptr = $this->lexer->ptr;
 				print "<b>Internal_CleanupWSByEatingInput:</b> input pointer is at $ptr; pattern=\"<tt>"
-					. htmlspecialchars($pattern) . "</tt>\"<br />\n";
+					. htmlspecialchars_54($pattern) . "</tt>\"<br />\n";
 			}
 
 			if (strlen($pattern) <= 0) return;
@@ -1199,7 +1199,7 @@
 		function Internal_CleanupWSByIteratingPointer($pattern, $pos, $array) {
 			if ($this->debug) {
 				print "<b>Internal_CleanupWSByIteratingPointer:</b> pointer is $pos; pattern=\"<tt>"
-					. htmlspecialchars($pattern) . "</tt>\"<br />\n";
+					. htmlspecialchars_54($pattern) . "</tt>\"<br />\n";
 			}
 
 			if (strlen($pattern) <= 0) return $pos;
@@ -1281,11 +1281,11 @@
 		//   $tag_name is the name of the tag being processed.
 		//
 		//   $default_value is the default value given; for example, in [url=foo], it's "foo".
-		//        This value has NOT been passed through htmlspecialchars().
+		//        This value has NOT been passed through htmlspecialchars_54().
 		//
 		//   $params is an array of key => value parameters associated with the tag; for example,
 		//        in [smiley src=smile alt=:-)], it's Array('src' => "smile", 'alt' => ":-)").
-		//        These keys and values have NOT beel passed through htmlspecialchars().
+		//        These keys and values have NOT beel passed through htmlspecialchars_54().
 		//
 		//   $contents is the body of the tag during BBCODE_OUTPUT.  For example, in
 		//        [b]Hello[/b], it's "Hello".  THIS VALUE IS ALWAYS HTML, not BBCode.
@@ -1300,7 +1300,7 @@
 
 			case BBCODE_CHECK:
 				if ($this->debug)
-					print "<b>DoTag:</b> check tag <tt>[" . htmlspecialchars($tag_name) . "]</tt><br />\n";
+					print "<b>DoTag:</b> check tag <tt>[" . htmlspecialchars_54($tag_name) . "]</tt><br />\n";
 
 				if (isset($tag_rule['allow'])) {
 					// An 'allow' array, if given, overrides the other check techniques.
@@ -1317,13 +1317,13 @@
 							else $value = @$tag_rule['default'][$param];
 						}
 						if ($this->debug) {
-							print "<b>DoTag:</b> check parameter <tt>\"" . htmlspecialchars($param)
-								. "\"</tt>, value <tt>\"" . htmlspecialchars($value) . "\", against \""
-								. htmlspecialchars($pattern) . "\"</tt><br />\n";
+							print "<b>DoTag:</b> check parameter <tt>\"" . htmlspecialchars_54($param)
+								. "\"</tt>, value <tt>\"" . htmlspecialchars_54($value) . "\", against \""
+								. htmlspecialchars_54($pattern) . "\"</tt><br />\n";
 						}
 						if (!preg_match($pattern, $value)) {
 							if ($this->debug) {
-								print "<b>DoTag:</b> parameter <tt>\"" . htmlspecialchars($param)
+								print "<b>DoTag:</b> parameter <tt>\"" . htmlspecialchars_54($param)
 									. "\"</tt> failed 'allow' check.<br />\n";
 							}
 							return false;
@@ -1360,7 +1360,7 @@
 				}
 				
 				if ($this->debug) {
-					print "<b>DoTag:</b> tag <tt>[" . htmlspecialchars($tag_name) . "]</tt> returned "
+					print "<b>DoTag:</b> tag <tt>[" . htmlspecialchars_54($tag_name) . "]</tt> returned "
 						. ($result ? "true" : "false") . "<br />\n";
 				}
 
@@ -1368,9 +1368,9 @@
 
 			case BBCODE_OUTPUT:
 				if ($this->debug) {
-					print "<b>DoTag:</b> output tag <tt>[" . htmlspecialchars($tag_name)
+					print "<b>DoTag:</b> output tag <tt>[" . htmlspecialchars_54($tag_name)
 						. "]</tt>: contents=<tt>"
-						. htmlspecialchars($contents) . "</tt><br />\n";
+						. htmlspecialchars_54($contents) . "</tt><br />\n";
 				}
 
 				if ($this->plain_mode) {
@@ -1391,7 +1391,7 @@
 						}
 						if (isset($params[$possible_content])
 							&& strlen($params[$possible_content]) > 0) {
-							$result = htmlspecialchars($params[$possible_content]);
+							$result = htmlspecialchars_54($params[$possible_content]);
 							break;
 						}
 					}
@@ -1399,9 +1399,9 @@
 					if ($this->debug) {
 						$content_list = "";
 						foreach ($plain_content as $possible_content)
-							$content_list .= htmlspecialchars($possible_content) . ",";
+							$content_list .= htmlspecialchars_54($possible_content) . ",";
 						print "<b>DoTag:</b> plain-mode tag; possible contents were ($content_list); using \""
-							. htmlspecialchars($possible_content) . "\"<br />\n";
+							. htmlspecialchars_54($possible_content) . "\"<br />\n";
 					}
 
 					$start = @$tag_rule['plain_start'];
@@ -1463,8 +1463,8 @@
 				}
 
 				if ($this->debug) {
-					print "<b>DoTag:</b> output tag <tt>[" . htmlspecialchars($tag_name)
-						. "]</tt>: result=<tt>" . htmlspecialchars($result) . "</tt><br />\n";
+					print "<b>DoTag:</b> output tag <tt>[" . htmlspecialchars_54($tag_name)
+						. "]</tt>: result=<tt>" . htmlspecialchars_54($result) . "</tt><br />\n";
 				}
 
 				return $result;
@@ -1514,7 +1514,7 @@
 		// Process an isolated tag, a tag that is not allowed to have an end tag.
 		function Internal_ProcessIsolatedTag($tag_name, $tag_params, $tag_rule) {
 			if ($this->debug) {
-				print "<b>ProcessIsolatedTag:</b> tag <tt>[" . htmlspecialchars($tag_name)
+				print "<b>ProcessIsolatedTag:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
 					. "]</tt> is isolated: no end tag allowed, so processing immediately.<br />\n";
 			}
 
@@ -1522,7 +1522,7 @@
 			// the option to say, no, I'm broken, don't try to process me.
 			if (!$this->DoTag(BBCODE_CHECK, $tag_name, @$tag_params['_default'], $tag_params, "")) {
 				if ($this->debug) {
-					print "<b>ProcessIsolatedTag:</b> isolated tag <tt>[" . htmlspecialchars($tag_name)
+					print "<b>ProcessIsolatedTag:</b> isolated tag <tt>[" . htmlspecialchars_54($tag_name)
 						. "]</tt> rejected its parameters; outputting as text after fixup.<br />\n";
 				}
 				$this->stack[] = Array(
@@ -1539,8 +1539,8 @@
 			$this->Internal_CleanupWSByEatingInput(@$tag_rule['after_tag']);
 
 			if ($this->debug) {
-				print "<b>ProcessIsolatedTag:</b> isolated tag <tt>[" . htmlspecialchars($tag_name)
-					. "]</tt> is done; pushing its output: <tt>" . htmlspecialchars($output) . "</tt><br />\n";
+				print "<b>ProcessIsolatedTag:</b> isolated tag <tt>[" . htmlspecialchars_54($tag_name)
+					. "]</tt> is done; pushing its output: <tt>" . htmlspecialchars_54($output) . "</tt><br />\n";
 			}
 
 			$this->stack[] = Array(
@@ -1564,7 +1564,7 @@
 			$end_tag = $this->lexer->tagmarker . "/" . $tag_name . $this->lexer->end_tagmarker;
 
 			if ($this->debug) {
-				print "<b>Internal_ProcessVerbatimTag:</b> tag <tt>[" . htmlspecialchars($tag_name)
+				print "<b>Internal_ProcessVerbatimTag:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
 					. "]</tt> uses verbatim content: searching for $end_tag...<br />\n";
 			}
 
@@ -1579,7 +1579,7 @@
 				}
 				if ($this->debug) {
 					print "<b>Internal_ProcessVerbatimTag:</b> push: <tt>"
-						. htmlspecialchars($this->lexer->text) . "</tt><br />\n";
+						. htmlspecialchars_54($this->lexer->text) . "</tt><br />\n";
 				}
 
 				// If this token pushes us past the output limit, split it up on a whitespace
@@ -1604,7 +1604,7 @@
 
 				$this->stack[] = Array(
 					BBCODE_STACK_TOKEN => $token_type,
-					BBCODE_STACK_TEXT => htmlspecialchars($this->lexer->text),
+					BBCODE_STACK_TEXT => htmlspecialchars_54($this->lexer->text),
 					BBCODE_STACK_TAG => $this->lexer->tag,
 					BBCODE_STACK_CLASS => $this->current_class,
 				);
@@ -1663,8 +1663,8 @@
 				@$tag_params['_default'], $tag_params, $content);
 
 			if ($this->debug) {
-				print "<b>Internal_ProcessVerbatimTag:</b> end of verbatim <tt>[" . htmlspecialchars($tag_name)
-					. "]</tt> tag processing; push output as text: <tt>" . htmlspecialchars($output)
+				print "<b>Internal_ProcessVerbatimTag:</b> end of verbatim <tt>[" . htmlspecialchars_54($tag_name)
+					. "]</tt> tag processing; push output as text: <tt>" . htmlspecialchars_54($output)
 					. "</tt><br />\n";
 			}
 
@@ -1686,13 +1686,13 @@
 			$tag_name = @$tag_params['_name'];
 			if ($this->debug) {
 				print "<hr />\n<b>Internal_ParseStartTagToken:</b> got tag <tt>["
-					. htmlspecialchars($tag_name) . "]</tt>.<br />\n";
+					. htmlspecialchars_54($tag_name) . "]</tt>.<br />\n";
 			}
 
 			// Make sure this tag has been defined.
 			if (!isset($this->tag_rules[$tag_name])) {
 				if ($this->debug) {
-					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars($tag_name)
+					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
 						. "]</tt> does not exist; pushing as text after fixup.<br />\n";
 				}
 				// If there is no such tag with this name, then just push the text as
@@ -1715,8 +1715,8 @@
 			if (!in_array($this->current_class, $allow_in)) {
 				// Not allowed.  Rewind the stack backward until it is allowed.
 				if ($this->debug) {
-					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars($tag_name)
-						. "]</tt> is disallowed inside class <tt>" . htmlspecialchars($this->current_class)
+					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
+						. "]</tt> is disallowed inside class <tt>" . htmlspecialchars_54($this->current_class)
 						. "</tt>; rewinding stack to a safe class.<br />\n";
 				}
 				if (!$this->Internal_RewindToClass($allow_in)) {
@@ -1751,7 +1751,7 @@
 			// push this tag on the stack and defer its processing until we see its end tag.
 
 			if ($this->debug) {
-				print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars($tag_name)
+				print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
 					. "]</tt> is allowed to have an end tag.<br />\n";
 			}
 
@@ -1759,7 +1759,7 @@
 			// to say, no, I'm broken, don't try to process me.
 			if (!$this->DoTag(BBCODE_CHECK, $tag_name, @$tag_params['_default'], $tag_params, "")) {
 				if ($this->debug) {
-					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars($tag_name)
+					print "<b>Internal_ParseStartTagToken:</b> tag <tt>[" . htmlspecialchars_54($tag_name)
 						. "]</tt> rejected its parameters; outputting as text after fixup.<br />\n";
 				}
 				$this->stack[] = Array(
@@ -1787,8 +1787,8 @@
 			else $newclass = $this->root_class;
 			
 			if ($this->debug) {
-				print "<b>Internal_ParseStartTagToken:</b> pushing tag <tt>[" . htmlspecialchars($tag_name)
-					. "]</tt> onto stack; switching to class <tt>" . htmlspecialchars($newclass)
+				print "<b>Internal_ParseStartTagToken:</b> pushing tag <tt>[" . htmlspecialchars_54($tag_name)
+					. "]</tt> onto stack; switching to class <tt>" . htmlspecialchars_54($newclass)
 					. "</tt>.<br />\n";
 			}
 
@@ -1811,7 +1811,7 @@
 			$tag_name = @$tag_params['_name'];
 			if ($this->debug) {
 				print "<hr />\n<b>Internal_ParseEndTagToken:</b> got end tag <tt>[/"
-					. htmlspecialchars($tag_name) . "]</tt>.<br />\n";
+					. htmlspecialchars_54($tag_name) . "]</tt>.<br />\n";
 			}
 
 			// Got an end tag.  Walk down the stack and see if there's a matching
@@ -1825,7 +1825,7 @@
 				// otherwise, just output this end tag itself as plain text.
 				if ($this->debug) {
 					print "<b>Internal_ParseEndTagToken:</b> no start tag for <tt>[/"
-						. htmlspecialchars($tag_name) . "]</tt>; push as text after fixup.<br />\n";
+						. htmlspecialchars_54($tag_name) . "]</tt>; push as text after fixup.<br />\n";
 				}
 				if (@$this->lost_start_tags[$tag_name] > 0) {
 					$this->lost_start_tags[$tag_name]--;
@@ -1858,8 +1858,8 @@
 			
 			if ($this->debug) {
 				print "<b>Internal_ParseEndTagToken:</b> end tag <tt>[/"
-					. htmlspecialchars($tag_name) . "]</tt> done; push output: <tt>"
-					. htmlspecialchars($output) . "</tt><br />\n";
+					. htmlspecialchars_54($tag_name) . "]</tt> done; push output: <tt>"
+					. htmlspecialchars_54($output) . "</tt><br />\n";
 			}
 
 			$this->stack[] = Array(
@@ -1882,7 +1882,7 @@
 
 			if ($this->debug) {
 				print "<b>Parse Begin:</b> input string is " . strlen($string) . " characters long:<br />\n"
-					. "<b>Parse:</b> input: <tt>" . htmlspecialchars(addcslashes($string, "\x00..\x1F\\\"'"))
+					. "<b>Parse:</b> input: <tt>" . htmlspecialchars_54(addcslashes($string, "\x00..\x1F\\\"'"))
 					. "</tt><br />\n";
 			}
 
@@ -1972,7 +1972,7 @@
 					// won't know what to do with it until we reach an operator (e.g., a tag or EOI).
 					if ($this->debug) {
 						print "<hr />\n<b>Internal_ParseTextToken:</b> fixup and push text: <tt>"
-							. htmlspecialchars($this->lexer->text) . "</tt><br />\n";
+							. htmlspecialchars_54($this->lexer->text) . "</tt><br />\n";
 					}
 
 					// If this token pushes us past the output limit, split it up on a whitespace
@@ -2131,7 +2131,7 @@
 			}
 
 			if ($this->debug) {
-				print "<b>Parse:</b> return: <tt>" . htmlspecialchars(addcslashes($result, "\x00..\x1F\\\"'"))
+				print "<b>Parse:</b> return: <tt>" . htmlspecialchars_54(addcslashes($result, "\x00..\x1F\\\"'"))
 					. "</tt><br />\n";
 			}
 

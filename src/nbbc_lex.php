@@ -410,7 +410,7 @@
 		function Internal_DecodeTag($tag) {
 
 			if ($this->debug) {
-				print "<b>Lexer::InternalDecodeTag:</b> input: " . htmlspecialchars($tag) . "<br />\n";
+				print "<b>Lexer::InternalDecodeTag:</b> input: " . htmlspecialchars_54($tag) . "<br />\n";
 			}
 
 			// Create the initial result object.
@@ -580,7 +580,7 @@
 				ob_start();
 				print_r($result);
 				$output = ob_get_clean();
-				print htmlspecialchars($output) . "<br />\n";
+				print htmlspecialchars_54($output) . "<br />\n";
 			}
 
 			// Save the resulting parameters, and return the whole shebang.

@@ -63,12 +63,12 @@ return $array;
 }
 }
 $BBCode_SourceDir = dirname(__FILE__);
-
 define('CHARSET', 'ISO-8859-1');
 define('REPLACE_FLAGS', ENT_COMPAT | ENT_XHTML);
-
+if (!function_exists('htmlspecialchars_54')) {
 function htmlspecialchars_54($string, $flags=REPLACE_FLAGS, $encoding=CHARSET, $double_encode=true) {
-    return htmlspecialchars($string, $flags, $encoding, $double_encode);
+return htmlspecialchars_54($string, $flags, $encoding, $double_encode);
+}
 }
 
 class BBCodeLexer {
@@ -1198,68 +1198,69 @@ $/Dx", $string);
 */
 }
 function HTMLEncode($string) {
-	if (!$this->allow_ampersand) 
-		return htmlspecialchars_54($string, ENT_COMPAT,'ISO-8859-1', true);
-	else return str_replace(Array('<', '>', '"'), Array('&lt;', '&gt;', '&quot;'), $string);
+if (!$this->allow_ampersand)
+return htmlspecialchars_54($string);
+else return str_replace(Array('<', '>', '"'),
+Array('&lt;', '&gt;', '&quot;'), $string);
 }
 function FixupOutput($string) {
-	if (!$this->detect_urls) {
-		$output = $this->Internal_ProcessSmileys($string);
-	}
-	else {
-		$chunks = $this->Internal_AutoDetectURLs($string);
-		$output = Array();
-		if (count($chunks)) {
-			$is_a_url = false;
-			foreach ($chunks as $index => $chunk) {
-				if (!$is_a_url) {
-					$chunk = $this->Internal_ProcessSmileys($chunk);
-				}
-				$output[] = $chunk;
-				$is_a_url = !$is_a_url;
-			}
-		}
-		$output = implode("", $output);
-	}
-	return $output;
+if (!$this->detect_urls) {
+$output = $this->Internal_ProcessSmileys($string);
+}
+else {
+$chunks = $this->Internal_AutoDetectURLs($string);
+$output = Array();
+if (count($chunks)) {
+$is_a_url = false;
+foreach ($chunks as $index => $chunk) {
+if (!$is_a_url) {
+$chunk = $this->Internal_ProcessSmileys($chunk);
+}
+$output[] = $chunk;
+$is_a_url = !$is_a_url;
+}
+}
+$output = implode("", $output);
+}
+return $output;
 }
 function Internal_ProcessSmileys($string) {
-	if (!$this->enable_smileys || $this->plain_mode) {
-		$output = $this->HTMLEncode($string);
-	}
-	else {
-	if ($this->smiley_regex === false) {
-	$this->Internal_RebuildSmileys();
-	}
-	$tokens = preg_split($this->smiley_regex, $string, -1, PREG_SPLIT_DELIM_CAPTURE);
-	if (count($tokens) <= 1) {
-	$output = $this->HTMLEncode($string);
-	}
-	else {
-	$output = "";
-	$is_a_smiley = false;
-	foreach ($tokens as $token) {
-	if (!$is_a_smiley) {
-	$output .= $this->HTMLEncode($token);
-	}
-	else {
-	if (isset($this->smiley_info[$token])) {
-	$info = $this->smiley_info[$token];
-	}
-	else {
-	$info = @getimagesize($this->smiley_dir . '/' . $this->smileys[$token]);
-	$this->smiley_info[$token] = $info;
-	}
-	$alt = htmlspecialchars_54($token);
-	$output .= "<img src=\"" . htmlspecialchars_54($this->smiley_url . '/' . $this->smileys[$token])
-	. "\" width=\"{$info[0]}\" height=\"{$info[1]}\""
-	. " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
-	}
-	$is_a_smiley = !$is_a_smiley;
-	}
-	}
-	}
-	return $output;
+if (!$this->enable_smileys || $this->plain_mode) {
+$output = $this->HTMLEncode($string);
+}
+else {
+if ($this->smiley_regex === false) {
+$this->Internal_RebuildSmileys();
+}
+$tokens = preg_split($this->smiley_regex, $string, -1, PREG_SPLIT_DELIM_CAPTURE);
+if (count($tokens) <= 1) {
+$output = $this->HTMLEncode($string);
+}
+else {
+$output = "";
+$is_a_smiley = false;
+foreach ($tokens as $token) {
+if (!$is_a_smiley) {
+$output .= $this->HTMLEncode($token);
+}
+else {
+if (isset($this->smiley_info[$token])) {
+$info = $this->smiley_info[$token];
+}
+else {
+$info = @getimagesize($this->smiley_dir . '/' . $this->smileys[$token]);
+$this->smiley_info[$token] = $info;
+}
+$alt = htmlspecialchars_54($token);
+$output .= "<img src=\"" . htmlspecialchars_54($this->smiley_url . '/' . $this->smileys[$token])
+. "\" width=\"{$info[0]}\" height=\"{$info[1]}\""
+. " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
+}
+$is_a_smiley = !$is_a_smiley;
+}
+}
+}
+return $output;
 }
 function Internal_RebuildSmileys() {
 $regex = Array("/(?<![\\w])(");
@@ -1278,7 +1279,7 @@ $output = preg_split("/( (?:
 (?:
 (?: (?: [a-zA-Z0-9-]{2,} \\. )+
 (?: arpa | com | org | net | edu | gov | mil | int | [a-z]{2}
-| aero | biz | coop | info | museum | name | pro
+| aero | biz | coop | info | museum | name | pro | games
 | example | invalid | localhost | test | local | onion | swift ) )
 | (?: [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} )
 | (?: [0-9A-Fa-f:]+ : [0-9A-Fa-f]{1,4} )
@@ -1297,7 +1298,7 @@ $output = preg_split("/( (?:
 (?:
 (?: (?: [a-zA-Z0-9-]{2,} \\. )+
 (?: arpa | com | org | net | edu | gov | mil | int | [a-z]{2}
-| aero | biz | coop | info | museum | name | pro
+| aero | biz | coop | info | museum | name | pro | games
 | example | invalid | localhost | test | local | onion | swift ) )
 | (?: [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} )
 )
@@ -1315,8 +1316,8 @@ $output = preg_split("/( (?:
 [a-zA-Z0-9._-]{2,} @
 (?:
 (?: (?: [a-zA-Z0-9-]{2,} \\. )+
-(?: arpa | com | org | net | edu | gov | mil | int
-| aero | biz | coop | info | museum | name | pro | [a-z]{2}
+(?: arpa | com | org | net | edu | gov | mil | int | [a-z]{2}
+| aero | biz | coop | info | museum | name | pro | games
 | example | invalid | localhost | test | local | onion | swift ) )
 | (?: [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} \\. [0-9]{1,3} )
 )
@@ -1930,124 +1931,127 @@ BBCODE_STACK_CLASS => $this->current_class,
 );
 }
 function Parse($string) {
-
-	$this->lexer = new BBCodeLexer($string, $this->tag_marker);
-	$this->lexer->debug = $this->debug;
-	$old_output_limit = $this->output_limit;
-	if ($this->output_limit > 0) {
-		if (strlen($string) < $this->output_limit) {
-			$this->output_limit = 0;
-		}
-		else if ($this->limit_precision > 0) {
-			$guess_length = $this->lexer->GuessTextLength();
-			if ($guess_length < $this->output_limit * ($this->limit_precision + 1.0)) {
-				$this->output_limit = 0;
-			}
-			else {
-			}
-		}
-	}
-	$this->stack = Array();
-	$this->start_tags = Array();
-	$this->lost_start_tags = Array();
-	$this->text_length = 0;
-	$this->was_limited = false;
-	if (strlen($this->pre_trim) > 0)
-	$this->Internal_CleanupWSByEatingInput($this->pre_trim);
-	$newline = $this->plain_mode ? "\n" : "<br />\n";
-	while (true) {
-		if (($token_type = $this->lexer->NextToken()) == BBCODE_EOI) {
-			break;
-		}
-		switch ($token_type) {
-			case BBCODE_TEXT:
-				if ($this->output_limit > 0 && $this->text_length + strlen($this->lexer->text) >= $this->output_limit) {
-					$text = $this->Internal_LimitText($this->lexer->text,
-					$this->output_limit - $this->text_length);
-					if (strlen($text) > 0) {
-						$this->text_length += strlen($text);
-						$this->stack[] = Array(
-						BBCODE_STACK_TOKEN => BBCODE_TEXT,
-						BBCODE_STACK_TEXT => $this->FixupOutput($text),
-						BBCODE_STACK_TAG => false,
-						BBCODE_STACK_CLASS => $this->current_class,
-						);
-					}
-					$this->Internal_DoLimit();
-					break 2;
-				}
-				$this->text_length += strlen($this->lexer->text);
-				$this->stack[] = Array(
-					BBCODE_STACK_TOKEN => BBCODE_TEXT,
-					BBCODE_STACK_TEXT => $this->FixupOutput($this->lexer->text),
-					BBCODE_STACK_TAG => false,
-					BBCODE_STACK_CLASS => $this->current_class,
-				);
-				break;
-			case BBCODE_WS:
-				if ($this->output_limit > 0 && $this->text_length + strlen($this->lexer->text) >= $this->output_limit) {
-					$this->Internal_DoLimit();
-					break 2;
-				}
-				$this->text_length += strlen($this->lexer->text);
-				$this->stack[] = Array(
-					BBCODE_STACK_TOKEN => BBCODE_WS,
-					BBCODE_STACK_TEXT => $this->lexer->text,
-					BBCODE_STACK_TAG => false,
-					BBCODE_STACK_CLASS => $this->current_class,
-				);
-				break;
-			case BBCODE_NL:
-				if ($this->ignore_newlines) {
-					if ($this->output_limit > 0 && $this->text_length + 1 >= $this->output_limit) {
-						$this->Internal_DoLimit();
-						break 2;
-					}
-					$this->text_length += 1;
-					$this->stack[] = Array(
-						BBCODE_STACK_TOKEN => BBCODE_WS,
-						BBCODE_STACK_TEXT => "\n",
-						BBCODE_STACK_TAG => false,
-						BBCODE_STACK_CLASS => $this->current_class,
-					);
-				}
-				else {
-					$this->Internal_CleanupWSByPoppingStack("s", $this->stack);
-					if ($this->output_limit > 0 && $this->text_length + 1 >= $this->output_limit) {
-						$this->Internal_DoLimit();
-						break 2;
-					}
-					$this->text_length += 1;
-					$this->stack[] = Array(
-						BBCODE_STACK_TOKEN => BBCODE_NL,
-						BBCODE_STACK_TEXT => $newline,
-						BBCODE_STACK_TAG => false,
-						BBCODE_STACK_CLASS => $this->current_class,
-					);
-					$this->Internal_CleanupWSByEatingInput("s");
-				}
-				break;
-			case BBCODE_TAG:
-				$this->Internal_ParseStartTagToken();
-				break;
-			case BBCODE_ENDTAG:
-				$this->Internal_ParseEndTagToken();
-				break;
-			default:
-				break;
-		}
-		}
-		if (strlen($this->post_trim) > 0)
-			$this->Internal_CleanupWSByPoppingStack($this->post_trim, $this->stack);
-			$result = $this->Internal_GenerateOutput(0);
-			$result = $this->Internal_CollectTextReverse($result, count($result) - 1);
-			$this->output_limit = $old_output_limit;
-			if ($this->plain_mode) {
-			$result = preg_replace("/[\\x00-\\x09\\x0B-\\x20]+/", " ", $result);
-			$result = preg_replace("/(?:[\\x20]*\\n){2,}[\\x20]*/", "\n\n", $result);
-			$result = trim($result);
-		}
-		return $result;
-	}
+$this->lexer = new BBCodeLexer($string, $this->tag_marker);
+$this->lexer->debug = $this->debug;
+$old_output_limit = $this->output_limit;
+if ($this->output_limit > 0) {
+if (strlen($string) < $this->output_limit) {
+$this->output_limit = 0;
+}
+else if ($this->limit_precision > 0) {
+$guess_length = $this->lexer->GuessTextLength();
+if ($guess_length < $this->output_limit * ($this->limit_precision + 1.0)) {
+$this->output_limit = 0;
+}
+else {
+}
+}
+}
+$this->stack = Array();
+$this->start_tags = Array();
+$this->lost_start_tags = Array();
+$this->text_length = 0;
+$this->was_limited = false;
+if (strlen($this->pre_trim) > 0)
+$this->Internal_CleanupWSByEatingInput($this->pre_trim);
+$newline = $this->plain_mode ? "\n" : "<br />\n";
+while (true) {
+if (($token_type = $this->lexer->NextToken()) == BBCODE_EOI) {
+break;
+}
+switch ($token_type) {
+case BBCODE_TEXT:
+if ($this->output_limit > 0
+&& $this->text_length + strlen($this->lexer->text) >= $this->output_limit) {
+$text = $this->Internal_LimitText($this->lexer->text,
+$this->output_limit - $this->text_length);
+if (strlen($text) > 0) {
+$this->text_length += strlen($text);
+$this->stack[] = Array(
+BBCODE_STACK_TOKEN => BBCODE_TEXT,
+BBCODE_STACK_TEXT => $this->FixupOutput($text),
+BBCODE_STACK_TAG => false,
+BBCODE_STACK_CLASS => $this->current_class,
+);
+}
+$this->Internal_DoLimit();
+break 2;
+}
+$this->text_length += strlen($this->lexer->text);
+$this->stack[] = Array(
+BBCODE_STACK_TOKEN => BBCODE_TEXT,
+BBCODE_STACK_TEXT => $this->FixupOutput($this->lexer->text),
+BBCODE_STACK_TAG => false,
+BBCODE_STACK_CLASS => $this->current_class,
+);
+break;
+case BBCODE_WS:
+if ($this->output_limit > 0
+&& $this->text_length + strlen($this->lexer->text) >= $this->output_limit) {
+$this->Internal_DoLimit();
+break 2;
+}
+$this->text_length += strlen($this->lexer->text);
+$this->stack[] = Array(
+BBCODE_STACK_TOKEN => BBCODE_WS,
+BBCODE_STACK_TEXT => $this->lexer->text,
+BBCODE_STACK_TAG => false,
+BBCODE_STACK_CLASS => $this->current_class,
+);
+break;
+case BBCODE_NL:
+if ($this->ignore_newlines) {
+if ($this->output_limit > 0
+&& $this->text_length + 1 >= $this->output_limit) {
+$this->Internal_DoLimit();
+break 2;
+}
+$this->text_length += 1;
+$this->stack[] = Array(
+BBCODE_STACK_TOKEN => BBCODE_WS,
+BBCODE_STACK_TEXT => "\n",
+BBCODE_STACK_TAG => false,
+BBCODE_STACK_CLASS => $this->current_class,
+);
+}
+else {
+$this->Internal_CleanupWSByPoppingStack("s", $this->stack);
+if ($this->output_limit > 0
+&& $this->text_length + 1 >= $this->output_limit) {
+$this->Internal_DoLimit();
+break 2;
+}
+$this->text_length += 1;
+$this->stack[] = Array(
+BBCODE_STACK_TOKEN => BBCODE_NL,
+BBCODE_STACK_TEXT => $newline,
+BBCODE_STACK_TAG => false,
+BBCODE_STACK_CLASS => $this->current_class,
+);
+$this->Internal_CleanupWSByEatingInput("s");
+}
+break;
+case BBCODE_TAG:
+$this->Internal_ParseStartTagToken();
+break;
+case BBCODE_ENDTAG:
+$this->Internal_ParseEndTagToken();
+break;
+default:
+break;
+}
+}
+if (strlen($this->post_trim) > 0)
+$this->Internal_CleanupWSByPoppingStack($this->post_trim, $this->stack);
+$result = $this->Internal_GenerateOutput(0);
+$result = $this->Internal_CollectTextReverse($result, count($result) - 1);
+$this->output_limit = $old_output_limit;
+if ($this->plain_mode) {
+$result = preg_replace("/[\\x00-\\x09\\x0B-\\x20]+/", " ", $result);
+$result = preg_replace("/(?:[\\x20]*\\n){2,}[\\x20]*/", "\n\n", $result);
+$result = trim($result);
+}
+return $result;
+}
 }
 
