@@ -415,14 +415,14 @@
 				if ($bbcode->debug)
 					print "ISVALIDURL<br />";
 				if ($bbcode->url_targetable !== false && isset($params['target']))
-					$target = " target=\"" . htmlspecialchars($params['target']) . "\"";
+					$target = " target=\"" . htmlspecialchars_54($params['target']) . "\"";
 				else $target = "";
 				if ($bbcode->url_target !== false)
 					if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
-						$target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
-				return '<a href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
+						$target = " target=\"" . htmlspecialchars_54($bbcode->url_target) . "\"";
+				return '<a href="' . htmlspecialchars_54($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
 			}
-			else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+			else return htmlspecialchars_54($params['_tag']) . $content . htmlspecialchars_54($params['_endtag']);
 		}
 
 		// Format an [email] tag by producing an <a>...</a> element.
@@ -435,8 +435,8 @@
 
 			$email = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
 			if ($bbcode->IsValidEmail($email))
-				return '<a href="mailto:' . htmlspecialchars($email) . '" class="bbcode_email">' . $content . '</a>';
-			else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+				return '<a href="mailto:' . htmlspecialchars_54($email) . '" class="bbcode_email">' . $content . '</a>';
+			else return htmlspecialchars_54($params['_tag']) . $content . htmlspecialchars_54($params['_endtag']);
 		}
 		
 		// Format a [size] tag by producing a <span> with a style with a different font-size.
@@ -494,7 +494,7 @@
 			$title = trim(@$params['title']);
 			if (strlen($title) <= 0) $title = trim($default);
 			return "<a href=\"{$bbcode->wiki_url}$name\" class=\"bbcode_wiki\">"
-				. htmlspecialchars($title) . "</a>";
+				. htmlspecialchars_54($title) . "</a>";
 		}
 
 		// Format an [img] tag.  The URL only allows http, https, and ftp protocols for safety.
@@ -510,21 +510,21 @@
 						$info = @getimagesize("{$bbcode->local_img_dir}/{$content}");
 						if ($info[2] == IMAGETYPE_GIF || $info[2] == IMAGETYPE_JPEG || $info[2] == IMAGETYPE_PNG) {
 							return "<img src=\""
-								. htmlspecialchars("{$bbcode->local_img_url}/{$content}") . "\" alt=\""
-								. htmlspecialchars(basename($content)) . "\" width=\""
-								. htmlspecialchars($info[0]) . "\" height=\""
-								. htmlspecialchars($info[1]) . "\" class=\"bbcode_img\" />";
+								. htmlspecialchars_54("{$bbcode->local_img_url}/{$content}") . "\" alt=\""
+								. htmlspecialchars_54(basename($content)) . "\" width=\""
+								. htmlspecialchars_54($info[0]) . "\" height=\""
+								. htmlspecialchars_54($info[1]) . "\" class=\"bbcode_img\" />";
 						}
 					}
 				}
 				else if ($bbcode->IsValidURL($content, false)) {
 					// Remote URL, or at least we don't know where it is.
-					return "<img src=\"" . htmlspecialchars($content) . "\" alt=\""
-						. htmlspecialchars(basename($content)) . "\" class=\"bbcode_img\" />";
+					return "<img src=\"" . htmlspecialchars_54($content) . "\" alt=\""
+						. htmlspecialchars_54(basename($content)) . "\" class=\"bbcode_img\" />";
 				}
 			}
 
-			return htmlspecialchars($params['_tag']) . htmlspecialchars($content) . htmlspecialchars($params['_endtag']);
+			return htmlspecialchars_54($params['_tag']) . htmlspecialchars_54($content) . htmlspecialchars_54($params['_endtag']);
 		}
 
 		// Format a [rule] tag.  This substitutes the content provided by the BBCode
@@ -551,19 +551,19 @@
 			if ($action == BBCODE_CHECK) return true;
 
 			if (isset($params['name'])) {
-				$title = htmlspecialchars(trim($params['name'])) . " wrote";
+				$title = htmlspecialchars_54(trim($params['name'])) . " wrote";
 				if (isset($params['date']))
-					$title .= " on " . htmlspecialchars(trim($params['date']));
+					$title .= " on " . htmlspecialchars_54(trim($params['date']));
 				$title .= ":";
 				if (isset($params['url'])) {
 					$url = trim($params['url']);
 					if ($bbcode->IsValidURL($url))
-						$title = "<a href=\"" . htmlspecialchars($params['url']) . "\">" . $title . "</a>";
+						$title = "<a href=\"" . htmlspecialchars_54($params['url']) . "\">" . $title . "</a>";
 				}
 			}
 			else if (!is_string($default))
 				$title = "Quote:";
-			else $title = htmlspecialchars(trim($default)) . " wrote:";
+			else $title = htmlspecialchars_54(trim($default)) . " wrote:";
 			return "\n<div class=\"bbcode_quote\">\n<div class=\"bbcode_quote_head\">"
 				. $title . "</div>\n<div class=\"bbcode_quote_body\">"
 				. $content . "</div>\n</div>\n";
