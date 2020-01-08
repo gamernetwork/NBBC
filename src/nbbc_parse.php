@@ -723,7 +723,7 @@
 
 					if (strlen(@$matches[2])) {
 						// We have one or more indexes, so break them apart and look up the requested data.
-						foreach (split(".", substr($matches[2], 1)) as $index) {
+						foreach (explode(".", substr($matches[2], 1)) as $index) {
 							if (is_array($value))
 								$value = @$value[$index];
 							else if (is_object($value)) {
