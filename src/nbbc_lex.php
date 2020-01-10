@@ -289,7 +289,7 @@
 							$this->state = BBCODE_LEXSTATE_TEXT;
 							if (strlen($this->text) > 0)
 								return $this->token = BBCODE_TEXT;
-							continue;
+							continue 2;
 						}
 					default:
 						// Whitespace.
@@ -307,12 +307,12 @@
 						if (preg_match($this->pat_comment, $this->text)) {
 							// This is a comment, not a tag, so treat it like it doesn't exist.
 							$this->state = BBCODE_LEXSTATE_TEXT;
-							continue;
+							continue 2;
 						}
 						if (preg_match($this->pat_comment2, $this->text)) {
 							// This is a comment, not a tag, so treat it like it doesn't exist.
 							$this->state = BBCODE_LEXSTATE_TEXT;
-							continue;
+							continue 2;
 						}
 						
 						// See if this is a [[wiki link]]; if so, convert it into a [wiki="" title=""] tag.
